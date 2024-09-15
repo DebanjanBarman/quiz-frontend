@@ -92,7 +92,7 @@ async function signIn() {
 
       setTimeout(async () => {
         await router.push('/');
-      }, 2000);
+      }, 500);
     }
     console.log({response})
   } catch (err) {

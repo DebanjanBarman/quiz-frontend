@@ -28,7 +28,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
   let authenticated = localStorage.getItem("authorized");
-  console.log(authenticated)
+  console.log({authenticated})
   if (authenticated) {
     if (to.name === 'login' || to.name === 'signup' || to.name === 'reset-password' || to.name === 'forgot-password') {
       return {name: 'home'}
