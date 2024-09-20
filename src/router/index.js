@@ -19,7 +19,32 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () => import('@/pages/login.vue')
-  }
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/pages/profile.vue')
+  },
+  {
+    path: "/admin",
+    name: 'admin',
+    component: () => import('@/pages/admin.vue')
+  },
+  {
+    path: '/admin/:id',
+    name: 'edit-quiz',
+    component: () => import('@/pages/edit_quiz.vue')
+  },
+  {
+    path: '/admin/:id/:questionId',
+    name: 'edit-question',
+    component: () => import('@/pages/edit_question.vue')
+  },
+  {
+    path: '/admin/new',
+    name: 'new-quiz',
+    component: () => import('@/pages/new_quiz.vue')
+  },
 ]
 
 const router = createRouter({
