@@ -15,7 +15,7 @@
     </v-row>
   </v-container>
 
-  <v-container v-if="quizzes.length===0">
+  <v-container v-if="loading">
     <v-row>
       <v-col cols="4" v-for="n in 2" :key="n">
         <v-skeleton-loader
@@ -23,6 +23,20 @@
           max-width="300"
           type="image, article, button"
         ></v-skeleton-loader>
+      </v-col>
+    </v-row>
+  </v-container>
+
+  <!--  Display in case of no games-->
+  <v-container
+    v-if="quizzes.length ===0"
+    style="border:1px solid #fdf;border-radius: 1rem ; width: 100%; height: 80vh;">
+    <v-row>
+      <v-col cols="12">
+        <v-card-title
+          style="margin-top: 18%;margin-left: 50%;transform: translateX(-50%);width: 300px">
+          Games will appear here
+        </v-card-title>
       </v-col>
     </v-row>
   </v-container>
@@ -93,6 +107,8 @@ import apiRoute from '../../api/index'
 import router from "@/router";
 
 let quizzes = ref([])
+const loading = ref(false);
+
 
 async function getQuizzes() {
   try {
@@ -117,7 +133,9 @@ async function getQuizzes() {
 }
 
 onMounted(async () => {
+  loading.value = true;
   await getQuizzes();
+  loading.value = false;
 })
 </script>
 
