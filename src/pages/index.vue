@@ -69,7 +69,7 @@
             <div v-if="quiz.status.toUpperCase()===`LIVE`">
               <v-chip color="green">{{ quiz.status.toUpperCase() }}</v-chip>
             </div>
-            <div v-if="quiz.status.toUpperCase()===`FINISHED`">
+            <div v-if="quiz.status.toUpperCase()===`COMPLETED`">
               <v-chip color="red">{{ quiz.status.toUpperCase() }}</v-chip>
             </div>
           </div>

@@ -45,6 +45,11 @@ const routes = [
     name: 'new-quiz',
     component: () => import('@/pages/new_quiz.vue')
   },
+  {
+    path: '/quiz/:id',
+    name: 'quiz',
+    component: () => import('@/pages/quiz.vue')
+  },
 ]
 
 const router = createRouter({
