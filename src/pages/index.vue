@@ -20,7 +20,7 @@
       <v-col cols="12">
         <v-card-title
           style="margin-top: 18%;margin-left: 50%;transform: translateX(-50%);width: 300px">
-          Games will appear here
+          Quizzes will appear here
         </v-card-title>
       </v-col>
     </v-row>
@@ -103,9 +103,11 @@
 <script setup>
 import AppBar from "@/components/AppBar.vue";
 import {onMounted, ref} from "vue";
+import {io} from "socket.io-client";
 import axios from 'axios';
 import apiRoute from '../../api/index'
 import router from "@/router";
+import api from "../../api/index";
 
 let quizzes = ref([])
 const loading = ref(false);
@@ -131,6 +133,20 @@ async function getQuizzes() {
     }
   }
 }
+
+const socket = io(api.baseURL);
+
+socket.on("connect", () => {
+  console.log(socket.id);
+});
+
+socket.on("quiz_updated", async (arg) => {
+  console.log(arg); // world
+  await getQuizzes();
+
+});
+
+// socket.emit("hello", "hello I'm Debanjan");
 
 onMounted(async () => {
   loading.value = true

@@ -129,6 +129,8 @@ import AppBar from "@/components/AppBar.vue";
 import axios from "axios";
 import apiRoute from "../../api";
 import {useRoute, useRouter} from "vue-router"
+import {io} from "socket.io-client";
+import api from "../../api";
 
 const router = useRouter();
 const routes = useRoute();
@@ -139,6 +141,13 @@ const accepted_users = ref([])
 const dialog = ref(false)
 const loading = ref(false)
 const quiz_time = ref(5);
+
+const socket = io(api.baseURL);
+
+socket.on("connect", () => {
+  console.log(socket.id);
+});
+
 
 async function back() {
   await router.push(`/admin/${quiz_id}`)
@@ -253,6 +262,10 @@ async function startQuiz() {
 
 }
 
+socket.on("new-join-request", async (arg) => {
+  await getPendingRequestList();
+  await listAcceptedUsers();
+});
 
 onMounted(async () => {
   await getPendingRequestList();

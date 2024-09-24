@@ -7,7 +7,7 @@
     </div>
   </div>
   <!--  TOP Bar-->
-  <div class="container" v-if="!notEligible">
+  <div class="container" v-if="!notEligible && question_list.length > 0" id="main-container">
     <div class="top_bar">
       <div class="score">
         Correct Answers:
@@ -254,8 +254,8 @@ async function finish_test() {
       });
 
     // console.log(response.data.data);
-    alert("Quiz Ended You'll be redirected to the home page")
-    await router.push("/")
+    // alert("Quiz Ended You'll be redirected to the home page")
+    await router.push(`/join/${quiz_id}`)
 
   } catch (err) {
     console.log(err)
@@ -312,7 +312,7 @@ async function checkEligibility() {
       });
 
 
-    console.log(response.data.data);
+    console.log(response.data);
 
   } catch (err) {
     clearInterval(intervalID);

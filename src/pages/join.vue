@@ -37,15 +37,28 @@
       <v-divider class="mx-4 mb-1"></v-divider>
       <v-card-title>Status</v-card-title>
       <div class="px-4 mb-8">
-        <div v-if="quiz.status.toUpperCase()===`WAITING`">
-          <v-chip color="orange">{{ quiz.status.toUpperCase() }}</v-chip>
-        </div>
-        <div v-if="quiz.status.toUpperCase()===`LIVE`">
-          <v-chip color="green">{{ quiz.status.toUpperCase() }}</v-chip>
-        </div>
-        <div v-if="quiz.status.toUpperCase()===`COMPLETED`">
-          <v-chip color="red">{{ quiz.status.toUpperCase() }}</v-chip>
-        </div>
+        <v-row class="mt-2">
+          <div v-if="quiz.status.toUpperCase()===`WAITING`">
+            <v-chip color="orange" class="ml-3">{{ quiz.status.toUpperCase() }}</v-chip>
+          </div>
+          <div v-if="quiz.status.toUpperCase()===`LIVE`">
+            <v-chip color="green" class="ml-3">{{ quiz.status.toUpperCase() }}</v-chip>
+          </div>
+          <div v-if="quiz.status.toUpperCase()===`COMPLETED`">
+            <v-chip color="red" class="ml-3">{{ quiz.status.toUpperCase() }}</v-chip>
+          </div>
+          <div v-if="!request_not_sent && !participation">
+            <v-chip color="blue" class="ml-3">Join Request sent</v-chip>
+          </div>
+          <div v-if="participation && !ended">
+            <v-chip color="blue" class="ml-3">Join Request Accepted</v-chip>
+          </div>
+          <div v-if="ended">
+            <v-chip color="blue" class="ml-3">Participated</v-chip>
+          </div>
+
+        </v-row>
+
       </div>
       <v-card-actions>
         <v-btn
@@ -57,6 +70,16 @@
           v-if="request_not_sent && quiz.status.toUpperCase()===`WAITING`"
         >
           Request to join
+        </v-btn>
+        <v-btn
+          variant="outlined"
+          color="green"
+          block
+          style="margin-bottom: 1rem"
+          v-if="eligible"
+          @mousedown="router.push(`/quiz/${quiz_id}`)"
+        >
+          Start
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -93,6 +116,8 @@ import AppBar from "@/components/AppBar.vue";
 import axios from "axios";
 import apiRoute from "../../api";
 import {useRoute, useRouter} from "vue-router"
+import {io} from "socket.io-client";
+import api from "../../api";
 
 const router = useRouter();
 const routes = useRoute();
@@ -108,6 +133,16 @@ const accepted_users = ref([]);
 const quiz_status = ref("")
 const quiz = ref({});
 const request_not_sent = ref(true);
+const notEligible = ref(false)
+const participation = ref(false);
+const eligible = ref(false);
+const socket = io(api.baseURL);
+const ended = ref(false);
+
+socket.on("connect", () => {
+  console.log(socket.id);
+});
+
 
 async function getResults() {
   try {
@@ -166,7 +201,8 @@ async function getQuiz() {
       localStorage.clear();
       await router.push("/login");
     } else {
-      alert("Something went wrong, redirecting to home")
+      console.log(err)
+      // alert("Something went wrong, redirecting to home")
       await router.push("/");
     }
   }
@@ -202,8 +238,9 @@ async function joinRequest() {
       localStorage.clear();
       await router.push("/login");
     } else {
-      alert("Something went wrong, redirecting to home")
-      await router.push("/");
+      console.log(err)
+      // alert("Something went wrong, redirecting to home")
+      // await router.push("/");
     }
   }
 
@@ -254,11 +291,79 @@ async function joinReqSent() {
   }
 }
 
+async function checkEligibility() {
+  try {
+    const response = await axios.get(
+      `${apiRoute.response}/eligible/${quiz_id}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`
+        }
+      });
+
+    eligible.value = true;
+    console.log(response.data.data);
+
+  } catch (err) {
+
+    console.log(err.status)
+    if (err.status === 401) {
+      console.log("NOT LOGGED IN")
+      localStorage.clear();
+      await router.push("/login");
+    } else if (err.status === 400) {
+      notEligible.value = true;
+      eligible.value = false;
+
+    }
+  }
+}
+
+async function checkParticipation() {
+  try {
+    const response = await axios.get(
+      `${apiRoute.response}/check/${quiz_id}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`
+        }
+      });
+    ended.value = response.data.data.ended
+    if (response.status === 200) {
+      participation.value = true;
+    }
+
+  } catch (err) {
+
+    console.log(err.status)
+    if (err.status === 401) {
+      console.log("NOT LOGGED IN")
+      localStorage.clear();
+      await router.push("/login");
+    } else if (err.status === 400) {
+      notEligible.value = true;
+    }
+  }
+
+}
+
+socket.on("quiz_updated", async (arg) => {
+  console.log(arg); // world
+  await getQuiz();
+  await getResults();
+  await listAcceptedUsers();
+  await joinReqSent();
+  await checkEligibility();
+  await checkParticipation();
+});
+
 onMounted(async () => {
   await getQuiz();
   await getResults();
   await listAcceptedUsers();
   await joinReqSent();
+  await checkEligibility();
+  await checkParticipation();
 })
 </script>
 

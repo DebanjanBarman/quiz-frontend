@@ -2,6 +2,7 @@
 const baseURL = "http://localhost:8000";
 let api;
 export default api = {
+  "baseURL": baseURL,
   login: `${baseURL}/api/users/login`,
   signup: `${baseURL}/api/users/signup`,
   forgotPassword: `${baseURL}/api/users/forgotPassword`,
