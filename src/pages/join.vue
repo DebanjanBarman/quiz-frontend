@@ -18,7 +18,8 @@
     </template>
   </v-snackbar>
 
-  <v-container class="main-section" v-if="quiz_status==='waiting'">
+  <v-container class="main-section"
+               v-if="quiz_status.toUpperCase()==='WAITING' || quiz_status.toUpperCase()==='COMPLETED' || quiz_status.toUpperCase()==='LIVE'">
     <v-card>
       <v-img
         height="250"
@@ -53,17 +54,36 @@
           block
           style="margin-bottom: 1rem"
           @mousedown="joinRequest"
-          v-if="request_not_sent"
+          v-if="request_not_sent && quiz.status.toUpperCase()===`WAITING`"
         >
           Request to join
         </v-btn>
-
       </v-card-actions>
     </v-card>
 
   </v-container>
-  <v-container v-if="quiz_status==='completed'">
-    <v-data-table :items="results"></v-data-table>
+  <v-container v-if="quiz_status==='completed' || quiz_status==='live'">
+    <h3
+      style="max-width: 50rem;
+      margin: auto auto 1rem;"
+    >
+      Leaderboard
+    </h3>
+    <v-data-table
+      :items="results"
+      style="max-width: 50rem;margin:auto auto 1rem;"
+    ></v-data-table>
+  </v-container>
+  <v-container v-if="quiz_status==='waiting'">
+    <h3
+      style="max-width: 40rem;
+      margin: auto auto 1rem;"
+    >Participants</h3>
+    <v-data-table
+      :items="accepted_users"
+      style="max-width: 40rem;margin: auto"
+    ></v-data-table>
+
   </v-container>
 </template>
 
@@ -84,6 +104,7 @@ const notification_color = ref("primary")
 const notification = ref(false)
 
 const results = ref([]);
+const accepted_users = ref([]);
 const quiz_status = ref("")
 const quiz = ref({});
 const request_not_sent = ref(true);
@@ -107,6 +128,9 @@ async function getResults() {
       keyval.score = data[dataKey].score;
       keyval.incorrect_answers = data[dataKey].incorrect_answers;
       keyval.time_taken = (data[dataKey].time_taken / 1000).toFixed(2);
+      if (keyval.time_taken < 0) {
+        keyval.time_taken = "NA"
+      }
       new_data.push(keyval);
     }
     results.value = new_data;
@@ -185,9 +209,56 @@ async function joinRequest() {
 
 }
 
+async function listAcceptedUsers() {
+  try {
+    const response = await axios.get(
+      `${apiRoute.result}/accepted-users/${quiz_id}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`
+        }
+      });
+
+    let data = response.data.data;
+    accepted_users.value = data;
+    console.log(data)
+  } catch (err) {
+    console.log(err)
+    if (err.status === 401) {
+      console.log("NOT LOGGED IN")
+      localStorage.clear();
+      await router.push("/login");
+    }
+  }
+}
+
+async function joinReqSent() {
+  try {
+    const response = await axios.get(
+      `${apiRoute.join_request_sent}/${quiz_id}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`
+        }
+      });
+
+    if (response.status === 200) {
+      request_not_sent.value = false;
+    }
+  } catch (err) {
+    if (err.status === 401) {
+      console.log("NOT LOGGED IN")
+      localStorage.clear();
+      await router.push("/login");
+    }
+  }
+}
+
 onMounted(async () => {
   await getQuiz();
-  await getResults()
+  await getResults();
+  await listAcceptedUsers();
+  await joinReqSent();
 })
 </script>
 
@@ -198,8 +269,4 @@ onMounted(async () => {
   margin: auto;
 }
 
-.notification {
-  height: 4rem;
-  width: 40rem;
-}
 </style>

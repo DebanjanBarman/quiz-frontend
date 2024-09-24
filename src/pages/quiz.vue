@@ -276,6 +276,8 @@ async function end_in_between() {
 
   if (end_clicked.value >= 2) {
     await finish_test();
+    clearInterval(intervalID);
+
   }
 }
 
@@ -292,6 +294,8 @@ async function nextQuestion() {
 
   } else {
     await finish_test();
+    clearInterval(intervalID);
+
     // await router.push("/");
   }
   answer_submitted.value = false;
@@ -311,6 +315,8 @@ async function checkEligibility() {
     console.log(response.data.data);
 
   } catch (err) {
+    clearInterval(intervalID);
+
     console.log(err.status)
     if (err.status === 401) {
       console.log("NOT LOGGED IN")
@@ -336,6 +342,8 @@ async function getEndingTime() {
     ending_time.value = Number(response.data.response[0].end_time);
 
   } catch (err) {
+    clearInterval(intervalID);
+
     console.log(err.status)
     if (err.status === 401) {
       console.log("NOT LOGGED IN")
@@ -358,7 +366,6 @@ onMounted(async id => {
     await getOptions()
     await button_text_color();
   }
-
 })
 
 </script>

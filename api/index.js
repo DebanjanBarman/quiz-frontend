@@ -19,6 +19,8 @@ export default api = {
   result: `${baseURL}/api/result`,
   join_game: `${baseURL}/api/game/join-req`,
   pending_req: `${baseURL}/api/game/pending-request`,
-  accept_join_req:`${baseURL}/api/admin/admit-user`,
-  reject_join_req:`${baseURL}/api/admin/reject-user`,
+  accept_join_req: `${baseURL}/api/admin/admit-user`,
+  reject_join_req: `${baseURL}/api/admin/reject-user`,
+  join_request_sent: `${baseURL}/api/game/join-req-sent`,
+  start_quiz: `${baseURL}/api/game/start-quiz`,
 }
