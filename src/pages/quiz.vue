@@ -1,4 +1,5 @@
 <template>
+  <html>
   <div v-if="notEligible" class="not-eligible">
     <div class="text">
       <p>Either This Quiz doesn't exist,</p>
@@ -9,20 +10,17 @@
   <div class="container" v-if="!notEligible">
     <div class="top_bar">
       <div class="score">
-        <!--        Correct Answers:-->
-        <!--        {{ score }}-->
-        <!--        <br>-->
-        <!--        Wrong Answers:-->
-        <!--        {{ incorrect }}-->
+        Correct Answers:
+        {{ score }}
+        <br>
+        Wrong Answers:
+        {{ incorrect }}
 
       </div>
       <div class="timer">
         <div>
-          <p>Time Left</p>
-        </div>
-        <div>
           <h2>
-            {{ new Date(timer).getSeconds() }}
+            {{ timer }}
           </h2>
         </div>
 
@@ -88,6 +86,8 @@
       </div>
     </div>
   </div>
+  </html>
+
 </template>
 
 <script setup>
@@ -100,7 +100,7 @@ import {useRoute, useRouter} from "vue-router"
 
 const router = useRouter();
 const routes = useRoute();
-const timer = ref(0);
+const timer = ref("");
 
 const notEligible = ref(false);
 
@@ -117,9 +117,37 @@ const end_clicked = ref(0);
 const btn_text = ref("next");
 const btn_color = ref("secondary");
 const answer_submitted = ref(false);
+const current_time = ref(1);
+const ending_time = ref(1);
 
-setInterval(() => {
-  timer.value = Date.now();
+
+function getTimeDifference(timestamp1, timestamp2) {
+  // Convert the timestamps to Date objects
+  const date1 = new Date(parseInt(timestamp1));
+  const date2 = new Date(parseInt(timestamp2));
+
+  // Get the difference in milliseconds
+  let diffMs = Math.abs(date2 - date1);
+
+  // Convert milliseconds into hours, minutes, and seconds
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  diffMs -= hours * (1000 * 60 * 60);
+  const minutes = Math.floor(diffMs / (1000 * 60));
+  diffMs -= minutes * (1000 * 60);
+  const seconds = Math.floor(diffMs / 1000);
+
+  // Return result in the format HH:MM:SS
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+
+const intervalID = setInterval(async () => {
+  current_time.value += 1000;
+  timer.value = getTimeDifference(current_time.value, ending_time.value);
+
+  if (current_time.value >= ending_time.value) {
+    await finish_test();
+  }
 }, 1000)
 
 
@@ -188,13 +216,13 @@ async function submitAnswer() {
     answer_submitted.value = true;
 
     // Show Color
-    // if (response.data.correct_answer === true) {
-    //   document.getElementById(selected_answer.value).classList.add('correct_answer');
-    //   document.getElementById(selected_answer.value).classList.remove('incorrect_answer');
-    // } else {
-    //   document.getElementById(selected_answer.value).classList.remove('correct_answer');
-    //   document.getElementById(selected_answer.value).classList.add('incorrect_answer');
-    // }
+    if (response.data.correct_answer === true) {
+      document.getElementById(selected_answer.value).classList.add('correct_answer');
+      document.getElementById(selected_answer.value).classList.remove('incorrect_answer');
+    } else {
+      document.getElementById(selected_answer.value).classList.remove('correct_answer');
+      document.getElementById(selected_answer.value).classList.add('incorrect_answer');
+    }
 
     // if(response.data.data)
 
@@ -227,7 +255,7 @@ async function finish_test() {
 
     // console.log(response.data.data);
     alert("Quiz Ended You'll be redirected to the home page")
-    history.back();
+    await router.push("/")
 
   } catch (err) {
     console.log(err)
@@ -294,11 +322,42 @@ async function checkEligibility() {
   }
 }
 
-onMounted(async () => {
+async function getEndingTime() {
+  try {
+    const response = await axios.get(
+      `${apiRoute.response}/ending_time/${quiz_id}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`
+        }
+      });
+
+    current_time.value = Number(response.data.current_time);
+    ending_time.value = Number(response.data.response[0].end_time);
+
+  } catch (err) {
+    console.log(err.status)
+    if (err.status === 401) {
+      console.log("NOT LOGGED IN")
+      localStorage.clear();
+      await router.push("/login");
+    } else if (err.status === 400) {
+      notEligible.value = true;
+    }
+  }
+}
+
+
+onMounted(async id => {
   await checkEligibility();
-  await getQuestions();
-  await getOptions()
-  await button_text_color();
+  if (notEligible.value === true) {
+    clearInterval(intervalID);
+  } else {
+    await getEndingTime();
+    await getQuestions();
+    await getOptions()
+    await button_text_color();
+  }
 
 })
 

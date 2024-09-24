@@ -104,11 +104,12 @@ import AppBar from "@/components/AppBar.vue";
 import {onMounted, ref} from "vue";
 import axios from 'axios';
 import apiRoute from '../../api/index'
-import router from "@/router";
+import {useRouter} from 'vue-router'
 
 let quizzes = ref([])
 const loading = ref(false);
 
+const router = useRouter()
 
 async function getQuizzes() {
   try {
@@ -126,7 +127,7 @@ async function getQuizzes() {
     if (err.status === 401) {
       console.log("NOT LOGGED IN")
       localStorage.clear();
-      router.push("/login");
+      await router.push("/login");
 
     }
   }

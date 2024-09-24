@@ -15,5 +15,10 @@ export default api = {
   options: `${baseURL}/api/options/all`,
   option: `${baseURL}/api/options`,
   answer: `${baseURL}/api/answer`,
-  response: `${baseURL}/api/response`
+  response: `${baseURL}/api/response`,
+  result: `${baseURL}/api/result`,
+  join_game: `${baseURL}/api/game/join-req`,
+  pending_req: `${baseURL}/api/game/pending-request`,
+  accept_join_req:`${baseURL}/api/admin/admit-user`,
+  reject_join_req:`${baseURL}/api/admin/reject-user`,
 }

@@ -30,70 +30,70 @@
       <v-col cols="12" xxl="4" xl="4" lg="4" md="6" sm="12" xs="12"
              v-if="quizzes.length>0" v-for="(quiz,id) in quizzes" :key="id" variant="elevated"
       >
-        <!--        <router-link :to="`quiz/${quiz.id}`" style="text-decoration: none;">-->
+        <router-link :to="`join/${quiz.id}`" style="text-decoration: none;">
 
-        <!--          :disabled="quiz.status.toUpperCase()==='WAITING' || quiz.status.toUpperCase()==='FINISHED'"-->
-        <v-card
-          :loading="loading"
-          class="mx-auto my-12 ma-16"
-          max-width="330"
-          elevation="3"
-        >
+          <!--          :disabled="quiz.status.toUpperCase()==='WAITING' || quiz.status.toUpperCase()==='FINISHED'"-->
+          <v-card
+            :loading="loading"
+            class="mx-auto my-12 ma-16"
+            max-width="330"
+            elevation="3"
+          >
 
-          <v-img
-            height="250"
-            :src="quiz.thumbnail"
-            cover
-          ></v-img>
+            <v-img
+              height="250"
+              :src="quiz.thumbnail"
+              cover
+            ></v-img>
 
 
-          <v-card-item>
-            <v-card-title> {{ quiz.title }}</v-card-title>
+            <v-card-item>
+              <v-card-title> {{ quiz.title }}</v-card-title>
 
-          </v-card-item>
+            </v-card-item>
 
-          <v-card-text>
-            <div>
-              {{ quiz.description }}
+            <v-card-text>
+              <div>
+                {{ quiz.description }}
+              </div>
+            </v-card-text>
+
+            <v-divider class="mx-4 mb-1"></v-divider>
+
+            <v-card-title>Status</v-card-title>
+
+            <div class="px-4 mb-8">
+              <div v-if="quiz.status.toUpperCase()===`WAITING`">
+                <v-chip color="orange">{{ quiz.status.toUpperCase() }}</v-chip>
+              </div>
+              <div v-if="quiz.status.toUpperCase()===`LIVE`">
+                <v-chip color="green">{{ quiz.status.toUpperCase() }}</v-chip>
+              </div>
+              <div v-if="quiz.status.toUpperCase()===`COMPLETED`">
+                <v-chip color="red">{{ quiz.status.toUpperCase() }}</v-chip>
+              </div>
             </div>
-          </v-card-text>
+            <v-card-actions>
+              <!--              <v-btn-->
+              <!--                text="Reserve"-->
+              <!--                block-->
+              <!--                border-->
 
-          <v-divider class="mx-4 mb-1"></v-divider>
+              <!--                @click="reserve"-->
+              <!--              ></v-btn>-->
+              <!--              <v-btn-->
+              <!--                variant="outlined"-->
+              <!--                color="deep-purple-lighten-2"-->
+              <!--                block-->
+              <!--                style="margin-bottom: 1rem"-->
+              <!--              >-->
+              <!--                Request to join-->
+              <!--              </v-btn>-->
 
-          <v-card-title>Status</v-card-title>
+            </v-card-actions>
+          </v-card>
 
-          <div class="px-4 mb-8">
-            <div v-if="quiz.status.toUpperCase()===`WAITING`">
-              <v-chip color="orange">{{ quiz.status.toUpperCase() }}</v-chip>
-            </div>
-            <div v-if="quiz.status.toUpperCase()===`LIVE`">
-              <v-chip color="green">{{ quiz.status.toUpperCase() }}</v-chip>
-            </div>
-            <div v-if="quiz.status.toUpperCase()===`COMPLETED`">
-              <v-chip color="red">{{ quiz.status.toUpperCase() }}</v-chip>
-            </div>
-          </div>
-          <v-card-actions>
-            <!--              <v-btn-->
-            <!--                text="Reserve"-->
-            <!--                block-->
-            <!--                border-->
-
-            <!--                @click="reserve"-->
-            <!--              ></v-btn>-->
-            <v-btn
-              variant="outlined"
-              color="deep-purple-lighten-2"
-              block
-              style="margin-bottom: 1rem"
-            >
-              Request to join
-            </v-btn>
-
-          </v-card-actions>
-        </v-card>
-
-        <!--        </router-link>-->
+        </router-link>
       </v-col>
     </v-row>
 

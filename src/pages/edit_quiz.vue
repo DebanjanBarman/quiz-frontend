@@ -12,7 +12,7 @@
       <template v-slot:activator="{ props: activatorProps }">
         <v-container>
           <v-row class="mx-4 my-3" style="border: 1px solid #fdf;border-radius: 1rem;">
-            <v-col cols="4">
+            <v-col cols="3">
               <v-btn
                 style="float: left"
                 prepend-icon="mdi-arrow-left"
@@ -24,7 +24,18 @@
               </v-btn>
 
             </v-col>
-            <v-col cols="4">
+            <v-col cols="3">
+              <router-link :to="`/admin/${quizId}/join-requests`">
+                <v-btn
+                  style="float: left"
+                  variant="outlined"
+                  color="purple"
+                >
+                  Pending Join Requests
+                </v-btn>
+              </router-link>
+            </v-col>
+            <v-col cols="3">
               <v-btn
                 variant="outlined"
                 color="purple"
@@ -34,7 +45,7 @@
                 Edit Quiz
               </v-btn>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="3">
               <v-btn
                 variant="outlined"
                 color="red"

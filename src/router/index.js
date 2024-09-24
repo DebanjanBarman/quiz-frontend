@@ -49,7 +49,15 @@ const routes = [
     path: '/quiz/:id',
     name: 'quiz',
     component: () => import('@/pages/quiz.vue')
-  },
+  }, {
+    path: '/join/:id',
+    name: 'join',
+    component: () => import('@/pages/join.vue')
+  }, {
+    path: '/admin/:id/join-requests',
+    name: 'join-requests',
+    component: () => import("@/pages/pending_requests.vue")
+  }
 ]
 
 const router = createRouter({
