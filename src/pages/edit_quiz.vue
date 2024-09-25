@@ -146,19 +146,9 @@
             class="ma-4">
       <v-row>
         <v-col cols="9">
-          <v-img
-            v-if="question.question_type.toLowerCase()==='both' || question.question_type.toLowerCase()==='image'"
-            :src="question.question_image"
-            width="100%"
-            height="100px"
-            style="margin-top: 1rem"
-          >
-          </v-img>
-          <v-card-title
-            style="margin-top: .4rem;color: #333"
 
-            v-if="question.question_type.toLowerCase()==='both' || question.question_type.toLowerCase()==='text'">
-            {{ question.question_text }}
+          <v-card-title>
+            {{ question.question }}
           </v-card-title>
         </v-col>
         <v-col cols="3">
@@ -357,13 +347,26 @@ async function back() {
 }
 
 async function createQuestion() {
+  const text = `### Example Question 1
+What is the formula for the given equation
+$$
+ \\sum \\limits_{i=1}^{n} i^2
+$$
+
+<!--
+            NOTE
+---------------------------------------
+CREATE QUESTION USING MARKDOWN FORMAT.
+CHARACTER LIMIT IS SET TO 2000.
+TO ADD IMAGES ONLY ADD IMAGE URL.
+DO NOT TRY TO UPLOAD FILES, AS I'VE NOT IMPLEMENTED THAT FEATURE.
+
+-->`
   try {
     const response = await axios.post(apiRoute.questions,
       {
         quiz_id: quizId,
-        "question_type": "BOTH",
-        "question_text": "Type Your Question Here",
-        "question_image": "Link of the Question Image"
+        question: text
       },
       {
         headers: {

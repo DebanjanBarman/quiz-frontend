@@ -45,11 +45,8 @@
     <!--    Main section-->
     <div class="main_section">
       <div class="left_section">
-        <div class="question">
-          {{ active_question.question_text }}
-        </div>
-
-        <img :src="active_question.question_image" alt="Question Image"></img>
+        <MdPreview :editorId="id" :modelValue="active_question.question"/>
+        <MdCatalog :editorId="id" :scrollElement="scrollElement"/>
       </div>
       <div class="right_section">
         <div class="options">
@@ -97,12 +94,17 @@ import axios from "axios";
 import apiRoute from "../../api";
 
 import {useRoute, useRouter} from "vue-router"
+import {MdPreview, MdCatalog} from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 
 const router = useRouter();
 const routes = useRoute();
 const timer = ref("");
 
 const notEligible = ref(false);
+const question = ref('# Hello Editor');
+const id = 'preview-only';
+const scrollElement = document.documentElement;
 
 const quiz_id = routes.params.id;
 const selected_answer = ref("");
@@ -160,7 +162,7 @@ async function getQuestions() {
           "Authorization": `Bearer ${localStorage.getItem("auth_token")}`
         }
       });
-    // console.log(response.data);
+    console.log(response.data);
     question_list.value = response.data.data
     active_question.value = question_list.value[active_index.value];
     total_questions.value = question_list.value.length;
@@ -427,12 +429,6 @@ onMounted(async id => {
 .left_section {
   border: 2px solid #dfd;
   border-radius: 5px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  grid-template-rows: auto auto 3rem;
-  padding: 1rem;
   margin-left: 5px;
 }
 

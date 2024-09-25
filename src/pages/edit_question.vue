@@ -31,32 +31,7 @@
 
   <v-container class="pa-4" style="border: 1px solid #fdf;border-radius: 1rem; width: 85%">
     <v-card-title>Question</v-card-title>
-    <v-row>
-      <v-col style="max-width: 500px; margin: auto" cols="12">
-        <v-form @submit.prevent>
-          <v-autocomplete
-            :items="type"
-            v-model="question_type"
-            variant="outlined"
-            density="compact"
-            label="Type of Question"
-          ></v-autocomplete>
-          <v-text-field
-            v-model="question_text"
-            variant="outlined"
-            density="compact"
-            label="Question"
-          ></v-text-field>
-          <v-text-field
-            v-model="question_image"
-            variant="outlined"
-            density="compact"
-            label="Question Image URL"
-          ></v-text-field>
-        </v-form>
-      </v-col>
-
-    </v-row>
+    <MdEditor v-model="text" language="en-US"/>
   </v-container>
 
   <v-container class="pa-4 mt-8" style="border: 1px solid #fdf;border-radius: 1rem; width: 85%">
@@ -180,6 +155,9 @@ import AppBar from "@/components/AppBar.vue";
 
 import {useRouter, useRoute} from "vue-router";
 import {ref, onMounted} from "vue";
+import {MdEditor} from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
+
 import axios from "axios";
 import apiRoute from "../../api";
 
@@ -191,11 +169,7 @@ const loading = ref(false);
 const quiz_id = route.params.id;
 const question_id = route.params.questionId;
 
-const type = ["TEXT", "IMAGE", "BOTH"]
-
-const question_type = ref("TEXT")
-const question_text = ref("")
-const question_image = ref("")
+const text = ref('# Hello Editor');
 
 const options = ref({})
 const correctOptions = ref({})
@@ -215,9 +189,7 @@ async function updateQuestion() {
     const response = await axios.patch(`${apiRoute.questions}/${question_id}`,
       {
         quiz_id: quiz_id,
-        question_type: question_type.value,
-        question_text: question_text.value,
-        question_image: question_image.value
+        question: text.value,
       },
       {
         headers: {
@@ -248,9 +220,7 @@ async function getQuestion() {
         "Authorization": `Bearer ${localStorage.getItem("auth_token")}`
       },
     });
-    question_type.value = response.data.question.question_type;
-    question_text.value = response.data.question.question_text;
-    question_image.value = response.data.question.question_image;
+    text.value = response.data.question.question;
     // console.log(response.data);
     // await back();
   } catch (err) {
