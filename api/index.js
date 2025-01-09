@@ -1,5 +1,5 @@
-// const baseURL = "https://quiz-backend.infotrek24.tech";
-const baseURL = "http://localhost:8000";
+const baseURL = "https://quiz-backend.infotrek24.tech";
+// const baseURL = "http://localhost:8000";
 let api;
 export default api = {
   "baseURL": baseURL,
