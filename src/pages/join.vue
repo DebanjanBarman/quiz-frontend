@@ -357,6 +357,10 @@ socket.on("quiz_updated", async (arg) => {
   await checkParticipation();
 });
 
+socket.on("new-join-request", async (arg) => {
+  await checkParticipation();
+})
+
 onMounted(async () => {
   await getQuiz();
   await getResults();
