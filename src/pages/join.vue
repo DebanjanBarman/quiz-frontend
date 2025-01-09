@@ -76,7 +76,7 @@
           color="green"
           block
           style="margin-bottom: 1rem"
-          v-if="eligible"
+          v-if="eligible && !ended"
           @mousedown="router.push(`/quiz/${quiz_id}`)"
         >
           Start
