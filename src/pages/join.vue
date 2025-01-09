@@ -358,10 +358,10 @@ socket.on("quiz_updated", async (arg) => {
 });
 
 socket.on("new-join-request", async (arg) => {
-  // await getQuiz();
-  // await getResults();
+  await getQuiz();
+  await getResults();
   await listAcceptedUsers();
-  // await joinReqSent();
+  await joinReqSent();
   await checkEligibility();
   await checkParticipation();
 })
