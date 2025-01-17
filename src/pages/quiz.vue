@@ -9,14 +9,14 @@
   <!--  TOP Bar-->
   <div class="container" v-if="!notEligible && question_list.length > 0" id="main-container">
     <div class="top_bar">
-      <div class="score">
-        Correct Answers:
-        {{ score }}
-        <br>
-        Wrong Answers:
-        {{ incorrect }}
+      <!--      <div class="score">-->
+      <!--        Correct Answers:-->
+      <!--        {{ score }}-->
+      <!--        <br>-->
+      <!--        Wrong Answers:-->
+      <!--        {{ incorrect }}-->
 
-      </div>
+      <!--      </div>-->
       <div class="timer">
         <div>
           <h2>
@@ -218,13 +218,13 @@ async function submitAnswer() {
     answer_submitted.value = true;
 
     // Show Color
-    if (response.data.correct_answer === true) {
-      document.getElementById(selected_answer.value).classList.add('correct_answer');
-      document.getElementById(selected_answer.value).classList.remove('incorrect_answer');
-    } else {
-      document.getElementById(selected_answer.value).classList.remove('correct_answer');
-      document.getElementById(selected_answer.value).classList.add('incorrect_answer');
-    }
+    // if (response.data.correct_answer === true) {
+    //   document.getElementById(selected_answer.value).classList.add('correct_answer');
+    //   document.getElementById(selected_answer.value).classList.remove('incorrect_answer');
+    // } else {
+    //   document.getElementById(selected_answer.value).classList.remove('correct_answer');
+    //   document.getElementById(selected_answer.value).classList.add('incorrect_answer');
+    // }
 
     // if(response.data.data)
 
