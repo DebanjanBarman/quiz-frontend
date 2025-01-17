@@ -16,7 +16,7 @@
       <!--        Wrong Answers:-->
       <!--        {{ incorrect }}-->
 
-      <!--      </div>-->
+      <!--    </div>-->
       <div class="timer">
         <div>
           <h2>
@@ -394,9 +394,7 @@ onMounted(async id => {
 }
 
 .top_bar {
-  display: grid;
-  grid-template-columns: 1fr 4fr 1fr;
-  gap: 1rem;
+  display: flex;
   border: 2px solid #dfd;
   justify-content: space-between;
 }
@@ -412,6 +410,7 @@ onMounted(async id => {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 2rem;
 }
 
 .submission {

@@ -162,7 +162,21 @@ async function getResults() {
       keyval.email = data[dataKey].email;
       keyval.score = data[dataKey].score;
       keyval.incorrect_answers = data[dataKey].incorrect_answers;
-      keyval.time_taken = (data[dataKey].time_taken / 1000).toFixed(2);
+      let minute = 0;
+      if (((data[dataKey].time_taken / 1000).toFixed(2) / 60) >= 1) {
+        minute = ((data[dataKey].time_taken / 1000).toFixed(0) / 60).toFixed(0);
+      }
+      let second = ((data[dataKey].time_taken / 1000).toFixed(2) % 60).toFixed(2)
+      console.log({second, minute})
+
+      keyval.time_taken = `${minute} Min, ${second} Sec`;
+      if (minute === 0 && second < 0) {
+        keyval.time_taken = "N/A";
+      }
+      // keyval.time_taken += " Min";
+      // keyval.time_taken += toString(second);
+      // keyval.time_taken = " Sec";
+
       if (keyval.time_taken < 0) {
         keyval.time_taken = "NA"
       }
