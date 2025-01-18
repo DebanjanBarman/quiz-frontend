@@ -85,29 +85,29 @@
     </v-card>
 
   </v-container>
-  <v-container v-if="quiz_status==='completed' || quiz_status==='live'">
-    <h3
-      style="max-width: 50rem;
-      margin: auto auto 1rem;"
-    >
-      Leaderboard
-    </h3>
-    <v-data-table
-      :items="results"
-      style="max-width: 50rem;margin:auto auto 1rem;"
-    ></v-data-table>
-  </v-container>
-  <v-container v-if="quiz_status==='waiting'">
-    <h3
-      style="max-width: 40rem;
-      margin: auto auto 1rem;"
-    >Participants</h3>
-    <v-data-table
-      :items="accepted_users"
-      style="max-width: 40rem;margin: auto"
-    ></v-data-table>
+<!--  <v-container v-if="quiz_status==='completed' || quiz_status==='live'">-->
+  <!--    <h3-->
+  <!--      style="max-width: 50rem;-->
+  <!--      margin: auto auto 1rem;"-->
+  <!--    >-->
+  <!--      Leaderboard-->
+  <!--    </h3>-->
+  <!--    <v-data-table-->
+  <!--      :items="results"-->
+  <!--      style="max-width: 50rem;margin:auto auto 1rem;"-->
+  <!--    ></v-data-table>-->
+  <!--  </v-container>-->
+<!--  <v-container v-if="quiz_status==='waiting'">-->
+  <!--    <h3-->
+  <!--      style="max-width: 40rem;-->
+  <!--      margin: auto auto 1rem;"-->
+  <!--    >Participants</h3>-->
+  <!--    <v-data-table-->
+  <!--      :items="accepted_users"-->
+  <!--      style="max-width: 40rem;margin: auto"-->
+  <!--    ></v-data-table>-->
 
-  </v-container>
+  <!--  </v-container>-->
 </template>
 
 <script setup>
@@ -360,12 +360,11 @@ async function checkParticipation() {
   }
 
 }
-
 socket.on("quiz_updated", async (arg) => {
   console.log(arg); // world
   await getQuiz();
-  await getResults();
-  await listAcceptedUsers();
+  // await getResults();
+  // await listAcceptedUsers();
   await joinReqSent();
   await checkEligibility();
   await checkParticipation();
@@ -373,8 +372,8 @@ socket.on("quiz_updated", async (arg) => {
 
 socket.on("new-join-request", async (arg) => {
   await getQuiz();
-  await getResults();
-  await listAcceptedUsers();
+  // await getResults();
+  // await listAcceptedUsers();
   await joinReqSent();
   await checkEligibility();
   await checkParticipation();
@@ -382,8 +381,8 @@ socket.on("new-join-request", async (arg) => {
 
 onMounted(async () => {
   await getQuiz();
-  await getResults();
-  await listAcceptedUsers();
+  // await getResults();
+  // await listAcceptedUsers();
   await joinReqSent();
   await checkEligibility();
   await checkParticipation();
