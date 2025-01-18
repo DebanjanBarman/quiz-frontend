@@ -1,5 +1,22 @@
 <template>
   <html>
+  <div class="text-center ma-2">
+
+    <v-snackbar
+      v-model="notification"
+      :color="notificationColor"
+    > {{ notificationText }}
+      <template v-slot:actions>
+        <v-btn
+          color="white"
+          variant="text"
+          @click="notification = false"
+        > Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
+
   <div v-if="notEligible" class="not-eligible">
     <div class="text">
       <p>Either This Quiz doesn't exist,</p>
@@ -100,6 +117,9 @@ import 'md-editor-v3/lib/style.css';
 const router = useRouter();
 const routes = useRoute();
 const timer = ref("");
+const notification = ref(false);
+const notificationColor = ref("blue")
+const notificationText = "You've already responded for this question, Move to the  Next Question"
 
 const notEligible = ref(false);
 const question = ref('# Hello Editor');
@@ -230,6 +250,10 @@ async function submitAnswer() {
 
   } catch (err) {
     console.log(err.response.data)
+    if (err.response.data.message === "You've already responded for this question") {
+      answer_submitted.value = true;
+      notification.value = true;
+    }
     if (err.status === 401) {
       console.log("NOT LOGGED IN")
       localStorage.clear();
