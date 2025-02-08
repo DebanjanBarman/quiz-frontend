@@ -62,7 +62,7 @@
     <!--    Main section-->
     <div class="main_section">
       <div class="left_section">
-        <MdPreview :editorId="id" :modelValue="active_question.question"/>
+        <MdPreview language="en-US" :editorId="id" :modelValue="active_question.question"/>
         <!--        <MdCatalog :editorId="id" :scrollElement="scrollElement"/>-->
       </div>
       <div class="right_section">
