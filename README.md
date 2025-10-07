@@ -2,6 +2,9 @@
 
 This is the official scaffolding tool for Vuetify, designed to give you a head start in building your new Vuetify application. It sets up a base template with all the necessary configurations and standard directory structure, enabling you to begin development without the hassle of setting up the project from scratch.
 
+[![Watch the video](https://img.youtube.com/vi/J_2tzEuV-cw/0.jpg)](https://youtu.be/J_2tzEuV-cw)
+
+
 ## ❗️ Important Links
 
 - 📄 [Docs](https://vuetifyjs.com/)

@@ -421,6 +421,7 @@ onMounted(async id => {
   display: flex;
   border: 2px solid #dfd;
   justify-content: space-between;
+  margin-top: 0;
 }
 
 .score {
